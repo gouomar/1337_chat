@@ -3,11 +3,32 @@
 import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
-import { Send, Sparkles } from "lucide-react"
+import { Send, Sparkles, Github, Terminal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import Logo1337 from "@/components/logo-1337"
-import GitHubLink from "@/components/github-link"
+
+// --- Inline Components for Preview Stability ---
+
+const Logo1337 = () => (
+  <div className="flex items-center gap-2 font-bold text-xl tracking-tighter">
+    <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 border border-primary/20 overflow-hidden group">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      <Terminal className="h-5 w-5 text-primary relative z-10" />
+    </div>
+    <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+      1337<span className="text-primary">AI</span>
+    </span>
+  </div>
+)
+
+const GitHubLink = () => (
+  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground transition-colors">
+    <Github className="h-5 w-5" />
+    <span className="sr-only">GitHub</span>
+  </Button>
+)
+
+// --- Main Chat Interface ---
 
 interface Message {
   id: string
@@ -31,46 +52,63 @@ export default function ChatInterface() {
     scrollToBottom()
   }, [messages])
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setMessages([
-        {
-          id: "1",
-          content:
-            "Welcome to 1337 AI Assistant. Whether you're a current student seeking guidance on projects, common core, or defense preparation, or exploring what 1337 has to offer - I'm here to help. What would you like to know?",
-          role: "assistant",
-          timestamp: new Date(),
-        },
-      ])
-    }, 500)
-    return () => clearTimeout(timer)
-  }, [])
-
   const handleSend = async () => {
     if (!input.trim()) return
 
+    // 1. Capture input and reset field immediately for better UX
+    const currentMessage = input
+    setInput("")
+    
+    // 2. Add User Message to UI
     const userMessage: Message = {
       id: Date.now().toString(),
-      content: input,
+      content: currentMessage,
       role: "user",
       timestamp: new Date(),
     }
 
     setMessages((prev) => [...prev, userMessage])
-    setInput("")
     setIsTyping(true)
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // 3. Send to the Backend API
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: currentMessage }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok")
+      }
+
+      const data = await response.json()
+
+      // 4. Create Assistant Message from API Data
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: "This is a demo response. Connect your AI backend to enable real conversations!",
+        content: data.message, // The text from Gemini
         role: "assistant",
         timestamp: new Date(),
       }
+
       setMessages((prev) => [...prev, aiMessage])
+    } catch (error) {
+      console.error("Error fetching chat response:", error)
+      
+      // Optional: Add an error message so the user knows it failed
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "Sorry, I'm having trouble connecting to the server. Please try again. (Make sure your API key is set in .env.local)",
+        role: "assistant",
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, errorMessage])
+    } finally {
       setIsTyping(false)
-    }, 1500)
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -78,6 +116,13 @@ export default function ChatInterface() {
       e.preventDefault()
       handleSend()
     }
+  }
+
+  // Helper to populate input when clicking suggested prompts
+  const handlePromptClick = (prompt: string) => {
+    setInput(prompt)
+    // Optional: Auto-send when clicking a prompt?
+    // handleSend() 
   }
 
   const suggestedPrompts = [
@@ -97,7 +142,7 @@ export default function ChatInterface() {
           <div className="flex items-center gap-4">
             <Logo1337 />
             <div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground hidden sm:block">
                 Made by <span className="text-primary font-medium">Omar_Gourragui</span>
               </p>
             </div>
@@ -129,7 +174,7 @@ export default function ChatInterface() {
                 {suggestedPrompts.map((prompt, index) => (
                   <button
                     key={index}
-                    onClick={() => setInput(prompt)}
+                    onClick={() => handlePromptClick(prompt)}
                     className="px-4 py-3 text-sm text-left bg-card/30 hover:bg-card/50 border border-border/50 hover:border-primary/50 rounded-lg backdrop-blur-md transition-all duration-300 hover:scale-105 hover:glow-border"
                   >
                     {prompt}
@@ -151,7 +196,7 @@ export default function ChatInterface() {
                     : "bg-card/50 border border-border/50 text-card-foreground"
                 }`}
               >
-                <p className="leading-relaxed">{message.content}</p>
+                <p className="leading-relaxed whitespace-pre-wrap">{message.content}</p>
                 <span className="text-xs text-muted-foreground mt-2 block">
                   {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                 </span>
