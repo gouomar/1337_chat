@@ -2,6 +2,9 @@
 
 import type React from "react"
 
+import ReactMarkdown from "react-markdown"
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { useState, useRef, useEffect } from "react"
 import { Send, Sparkles, Github, Terminal } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -22,10 +25,16 @@ const Logo1337 = () => (
 )
 
 const GitHubLink = () => (
-  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground transition-colors">
-    <Github className="h-5 w-5" />
-    <span className="sr-only">GitHub</span>
-  </Button>
+  <a
+    href="https://github.com/gouomar"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground transition-colors">
+      <Github className="h-5 w-5" />
+      <span className="sr-only">GitHub</span>
+    </Button>
+  </a>
 )
 
 // --- Main Chat Interface ---
@@ -58,7 +67,7 @@ export default function ChatInterface() {
     // 1. Capture input and reset field immediately for better UX
     const currentMessage = input
     setInput("")
-    
+
     // 2. Add User Message to UI
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -97,7 +106,7 @@ export default function ChatInterface() {
       setMessages((prev) => [...prev, aiMessage])
     } catch (error) {
       console.error("Error fetching chat response:", error)
-      
+
       // Optional: Add an error message so the user knows it failed
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -187,18 +196,104 @@ export default function ChatInterface() {
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`mb-6 flex ${message.role === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-4 duration-500`}
+              className={`mb-6 flex ${message.role === "user" ? "justify-end" : "justify-start"
+                } animate-in fade-in slide-in-from-bottom-4 duration-500`}
             >
               <div
-                className={`max-w-[80%] rounded-2xl px-6 py-4 backdrop-blur-md transition-all duration-300 hover:scale-[1.02] ${
-                  message.role === "user"
-                    ? "bg-primary/20 border border-primary/30 glow-border text-foreground ml-auto"
-                    : "bg-card/50 border border-border/50 text-card-foreground"
-                }`}
+                className={`max-w-[80%] rounded-2xl px-6 py-4 backdrop-blur-md transition-all duration-300 hover:scale-[1.02] ${message.role === "user"
+                  ? "bg-primary/20 border border-primary/30 glow-border text-foreground ml-auto"
+                  : "bg-card/50 border border-border/50 text-card-foreground"
+                  }`}
               >
-                <p className="leading-relaxed whitespace-pre-wrap">{message.content}</p>
+                {/* --- START OF MARKDOWN REPLACEMENT --- */}
+                <div className="prose prose-invert max-w-none text-sm sm:text-base leading-relaxed break-words">
+                  <ReactMarkdown
+                    components={{
+                      code: ({ node, className, children, ...props }) => {
+                        // 1. Check if it is a block of code (has a language) or just a word
+                        const match = /language-(\w+)/.exec(className || '')
+                        const isBlock = !!match || (String(children).includes('\n'));
+
+                        if (isBlock) {
+                          return (
+                            <div className="rounded-md overflow-hidden my-4 shadow-lg border border-[#313244]">
+                              {/* The 'Mac Window' Header */}
+                              <div className="bg-[#1e1e2e] px-4 py-2 flex items-center gap-2 border-b border-[#313244]">
+                                <div className="w-3 h-3 rounded-full bg-[#f38ba8]" /> {/* Red */}
+                                <div className="w-3 h-3 rounded-full bg-[#f9e2af]" /> {/* Yellow */}
+                                <div className="w-3 h-3 rounded-full bg-[#a6e3a1]" /> {/* Green */}
+                                <span className="ml-2 text-xs text-[#a6adc8] font-mono opacity-50">
+                                  {match ? match[1] : 'code'}
+                                </span>
+                              </div>
+
+                              {/* The Syntax Highlighter */}
+                              <SyntaxHighlighter
+                                {...props}
+                                style={dracula}
+                                language={match ? match[1] : 'text'}
+                                PreTag="div"
+                                customStyle={{
+                                  margin: 0,
+                                  borderRadius: '0 0 6px 6px',
+                                  background: '#1e1e2e', // Catppuccin Base color
+                                  fontSize: '0.875rem',
+                                }}
+                              >
+                                {String(children).replace(/\n$/, '')}
+                              </SyntaxHighlighter>
+                            </div>
+                          )
+                        }
+
+                        // 2. INLINE CODE (Single words like 'int' or 'variable')
+                        return (
+                          <code
+                            className="font-mono text-sm px-1.5 py-0.5 rounded bg-[#313244] text-[#f5c2e7] border border-[#45475a] mx-1"
+                            {...props}
+                          >
+                            {children}
+                          </code>
+                        )
+                      },
+
+                      // 3. Other Elements (Headings, lists, bold text)
+                      strong: ({ node, ...props }) => (
+                        <span className="font-bold text-[#89b4fa]" {...props} />
+                      ),
+                      ul: ({ node, ...props }) => (
+                        <ul className="list-disc pl-4 my-2 space-y-1 text-[#cdd6f4]" {...props} />
+                      ),
+                      ol: ({ node, ...props }) => (
+                        <ol className="list-decimal pl-4 my-2 space-y-1 text-[#cdd6f4]" {...props} />
+                      ),
+                      li: ({ node, ...props }) => (
+                        <li className="marker:text-[#cba6f7]" {...props} />
+                      ),
+                      p: ({ node, ...props }) => (
+                        <p className="text-[#cdd6f4]" {...props} />
+                      ),
+                      h1: ({ node, ...props }) => (
+                        <h1 className="text-xl font-bold mt-4 mb-2 text-[#89b4fa]" {...props} />
+                      ),
+                      h2: ({ node, ...props }) => (
+                        <h2 className="text-lg font-bold mt-3 mb-2 text-[#89b4fa]/90" {...props} />
+                      ),
+                      h3: ({ node, ...props }) => (
+                        <h3 className="text-base font-bold mt-2 mb-1 text-[#89b4fa]/80" {...props} />
+                      ),
+                    }}
+                  >
+                    {message.content}
+                  </ReactMarkdown>
+                </div>
+                {/* --- END OF MARKDOWN REPLACEMENT --- */}
+
                 <span className="text-xs text-muted-foreground mt-2 block">
-                  {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  {message.timestamp.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </span>
               </div>
             </div>
