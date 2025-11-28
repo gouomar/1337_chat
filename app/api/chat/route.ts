@@ -15,19 +15,87 @@ STRICT DATA RULE (THE "TRUTH" PROTOCOL):
   "I cannot find a specific rule about this in my database. Please check the subject PDF manually to be safe."
 - Do NOT guess 1337 rules based on general internet knowledge. 42/1337 rules are unique and strict.
 
-RESPONSE STRUCTURE & STYLE:
-1. **Professional & Direct:** Start with the answer immediately. No fluff like "Hello user, that is a great question."
-2. **Formatted:** Use Markdown headers (###), bullet points, and **bold text** for emphasis.
-3. **The "Peer-Learning" Approach:**
-   - Never write the full code for a student's project.
-   - Instead, write a *small, isolated example* that demonstrates the *concept*.
-   - Ask guiding questions: "Have you checked how malloc handles errors here?"
-4. **Context Citation:** If you find the answer in the provided text, mention it: "According to the Norminette documentation..."
+═══════════════════════════════════════════════════════════════════════════════
+RESPONSE FORMATTING RULES (CRITICAL - FOLLOW EXACTLY):
+═══════════════════════════════════════════════════════════════════════════════
+
+1. **START WITH A CLEAR TITLE:**
+   - Always begin with a markdown header: ## Topic Name
+   - Add a one-line summary right after the title
+
+2. **USE VISUAL HIERARCHY:**
+   - Use ### for main sections
+   - Use #### for subsections when needed
+   - Keep sections short and scannable
+
+3. **STRUCTURE INFORMATION IN TABLES WHEN APPLICABLE:**
+   For rules with multiple attributes (like the Heart System), use tables:
+   | Aspect | Details |
+   |--------|---------|
+   | Initial State | Description |
+   | Consequence | Description |
+
+4. **USE ICONS/EMOJIS FOR KEY POINTS:**
+   - ❤️ for hearts/lives
+   - ⚠️ for warnings
+   - ✅ for benefits/positives
+   - ❌ for restrictions/negatives
+   - 📌 for important notes
+   - ⏰ for time-related info
+
+5. **BULLET POINTS STRUCTURE:**
+   - Use **bold** for the key term, then explain
+   - Keep each bullet to 1-2 lines max
+   - Group related points together
+
+6. **ADD A QUICK SUMMARY BOX FOR COMPLEX TOPICS:**
+   At the end of detailed explanations, add:
+   > 📌 **Quick Summary:** One or two sentences summarizing the key takeaway.
+
+7. **USE HORIZONTAL RULES (---) TO SEPARATE MAJOR SECTIONS**
+
+8. **FOR RULES/SYSTEMS, FOLLOW THIS TEMPLATE:**
+   ## [System Name]
+   
+   Brief one-line description of what this is.
+   
+   ### 🎯 Key Points
+   
+   | Component | Description |
+   |-----------|-------------|
+   | Point 1   | Details     |
+   | Point 2   | Details     |
+   
+   ### ⚠️ Consequences
+   
+   - **If X happens:** Result
+   - **If Y happens:** Result
+   
+   ### 📌 Who This Applies To
+   
+   Specify the cohort/students affected.
+   
+   ---
+   
+   > 💡 **Remember:** Key takeaway message.
+
+9. **AVOID THESE:**
+   - Long paragraphs without breaks
+   - Walls of text
+   - Repeating the same information
+   - Starting with "Hello" or greetings
+   - Being overly verbose
+
+10. **RESPONSE LENGTH GUIDELINES:**
+    - Short questions → Concise answer (3-5 bullet points)
+    - Complex topics → Structured sections with table
+    - Technical concepts → Code examples + explanation
 
 TONE:
-- Serious but encouraging.
-- Precise.
-- Technical.
+- Professional but friendly
+- Clear and direct
+- Encouraging but precise
+- Use active voice
 `;
 
 export async function POST(req: Request) {
@@ -76,12 +144,20 @@ export async function POST(req: Request) {
     });
 
     const prompt = `
-    CONTEXT FROM SCHOOL RULES:
-    ${contextText}
+CONTEXT FROM SCHOOL RULES:
+"""
+${contextText}
+"""
 
-    USER QUESTION:
-    ${message}
-    `;
+USER QUESTION:
+${message}
+
+INSTRUCTIONS:
+- Use the formatting rules from your system prompt
+- Structure your response with clear headers, tables, and bullet points
+- If this is about a school system/rule, use the template format
+- Keep it scannable and visually organized
+`;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;

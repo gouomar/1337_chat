@@ -3,6 +3,7 @@
 import type React from "react"
 
 import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { useState, useRef, useEffect } from "react"
@@ -284,7 +285,65 @@ export default function ChatInterface() {
                 >
                   <div className="prose prose-invert max-w-none text-base md:text-lg leading-relaxed">
                     <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
                       components={{
+                        // Table components
+                        table: ({ node, ...props }) => (
+                          <div className="overflow-x-auto my-4 rounded-xl border border-white/10">
+                            <table className="w-full border-collapse text-sm" {...props} />
+                          </div>
+                        ),
+                        thead: ({ node, ...props }) => (
+                          <thead className="bg-white/10 border-b border-white/10" {...props} />
+                        ),
+                        tbody: ({ node, ...props }) => (
+                          <tbody className="divide-y divide-white/5" {...props} />
+                        ),
+                        tr: ({ node, ...props }) => (
+                          <tr className="hover:bg-white/5 transition-colors" {...props} />
+                        ),
+                        th: ({ node, ...props }) => (
+                          <th className="px-4 py-3 text-left font-semibold text-white/90 text-sm" {...props} />
+                        ),
+                        td: ({ node, ...props }) => (
+                          <td className="px-4 py-3 text-white/70" {...props} />
+                        ),
+                        // Headers
+                        h1: ({ node, ...props }) => (
+                          <h1 className="text-2xl font-bold mb-4 text-white border-b border-white/10 pb-2" {...props} />
+                        ),
+                        h2: ({ node, ...props }) => (
+                          <h2 className="text-xl font-bold mb-3 mt-6 text-white" {...props} />
+                        ),
+                        h3: ({ node, ...props }) => (
+                          <h3 className="text-lg font-semibold mb-2 mt-4 text-white/90" {...props} />
+                        ),
+                        h4: ({ node, ...props }) => (
+                          <h4 className="text-base font-semibold mb-2 mt-3 text-white/80" {...props} />
+                        ),
+                        // Lists
+                        ul: ({ node, ...props }) => (
+                          <ul className="list-disc list-inside space-y-1 mb-4 text-white/80" {...props} />
+                        ),
+                        ol: ({ node, ...props }) => (
+                          <ol className="list-decimal list-inside space-y-1 mb-4 text-white/80" {...props} />
+                        ),
+                        li: ({ node, ...props }) => (
+                          <li className="text-white/80" {...props} />
+                        ),
+                        // Blockquote for summary boxes
+                        blockquote: ({ node, ...props }) => (
+                          <blockquote className="border-l-4 border-primary/50 bg-white/5 pl-4 py-2 my-4 rounded-r-lg italic text-white/80" {...props} />
+                        ),
+                        // Horizontal rule
+                        hr: ({ node, ...props }) => (
+                          <hr className="border-white/10 my-6" {...props} />
+                        ),
+                        // Strong/Bold
+                        strong: ({ node, ...props }) => (
+                          <strong className="font-semibold text-white" {...props} />
+                        ),
+                        // Code blocks
                         code: ({ node, className, children, ...props }) => {
                           const match = /language-(\w+)/.exec(className || '')
                           const isBlock = !!match || (String(children).includes('\n'));
