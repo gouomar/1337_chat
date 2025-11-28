@@ -383,7 +383,7 @@ export default function ChatInterface() {
             </Button>
           </div>
           <p className="text-xs text-white/30 text-center mt-4 font-light tracking-wider">
-            Powered by 1337 RbatiBot AI • Designed by Omar_Gourragui
+            Powered by 1337 RbatiBot AI • Designed by Omar_Gourragui, Bazghoro
           </p>
         </div>
       </div>
