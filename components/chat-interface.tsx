@@ -67,7 +67,7 @@ const Logo1337 = () => (
       <Terminal className="h-5 w-5 text-white relative z-10" />
     </div>
     <span className="text-2xl font-medium bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
-      1337<span className="text-primary font-bold">NEXUS</span>
+      1337<span className="text-primary font-bold">RbatiBot</span>
     </span>
   </div>
 )
@@ -195,10 +195,10 @@ export default function ChatInterface() {
 
   const suggestedPrompts = [
     "Explain the peer-learning methodology",
-    "Optimize my C code for performance",
-    "Guide me through the Born2beroot project",
+    "What are the rules for peer evaluations?",
+    "Explain the Norminette coding standard",
     "What is the Black Hole system?",
-    "Generate a Makefile for my project",
+    "How does the coalition system work?",
     "Explain memory management in C",
   ]
 
@@ -235,9 +235,9 @@ export default function ChatInterface() {
                 <h1
                   onClick={() => window.location.reload()}
                   className="text-5xl md:text-7xl font-bold mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white via-white/90 to-white/50 glitch cursor-pointer hover:scale-105 transition-transform duration-300"
-                  data-text="1337 NEXUS"
+                  data-text="1337 RbatiBot"
                 >
-                  1337 NEXUS
+                  1337 RbatiBot
                 </h1>
 
                 <p className="text-xl text-white/60 max-w-2xl mb-12 leading-relaxed font-light">
@@ -383,7 +383,7 @@ export default function ChatInterface() {
             </Button>
           </div>
           <p className="text-xs text-white/30 text-center mt-4 font-light tracking-wider">
-            Powered by 1337 NEXUS AI • Designed by Omar_Gourragui
+            Powered by 1337 RbatiBot AI • Designed by Omar_Gourragui
           </p>
         </div>
       </div>
