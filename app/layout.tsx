@@ -8,8 +8,8 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "1337 AI Console - Coding School Chatbot",
-  description: "Futuristic AI chatbot interface for 1337 coding school",
+  title: "1337 NEXUS - The Ultimate Coding Companion",
+  description: "Advanced AI coding assistant for 1337 students. Architecting the future of code.",
   generator: "v0.app",
   icons: {
     icon: [
