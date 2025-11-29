@@ -61,15 +61,24 @@ const BackgroundSlider = () => {
 const Logo1337 = () => (
   <div
     onClick={() => window.location.reload()}
-    className="flex items-center gap-2 font-bold text-xl tracking-tighter cursor-pointer hover:opacity-80 transition-opacity"
+    className="flex items-center gap-3 font-bold text-xl tracking-tighter cursor-pointer hover:opacity-80 transition-opacity"
   >
     <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 border border-white/20 backdrop-blur-md overflow-hidden group shadow-lg">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       <Terminal className="h-5 w-5 text-white relative z-10" />
     </div>
-    <span className="text-2xl font-medium bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
-      1337<span className="text-primary font-bold">RbatiBot</span>
-    </span>
+    <div className="flex items-center gap-2">
+      <span className="text-2xl font-medium bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
+        <span className="text-primary font-bold">Lm9dem</span>
+      </span>
+      <span className="text-white/30">•</span>
+      <span className="text-sm text-white/60 font-medium tracking-wide">
+        <span className="text-white/40">by</span>{" "}
+        <span className="text-primary/80 hover:text-primary transition-colors">Omar_Gourragui</span>
+        <span className="text-white/40"> & </span>
+        <span className="text-primary/80 hover:text-primary transition-colors">Bazghoro</span>
+      </span>
+    </div>
   </div>
 )
 
@@ -236,13 +245,13 @@ export default function ChatInterface() {
                 <h1
                   onClick={() => window.location.reload()}
                   className="text-5xl md:text-7xl font-bold mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white via-white/90 to-white/50 glitch cursor-pointer hover:scale-105 transition-transform duration-300"
-                  data-text="1337 RbatiBot"
+                  data-text="Lm9dem"
                 >
-                  1337 RbatiBot
+                  Lm9dem
                 </h1>
 
                 <p className="text-xl text-white/60 max-w-2xl mb-12 leading-relaxed font-light">
-                  Architecting the future of code. Experience the next generation of AI assistance designed for the 1337 curriculum.
+                  Open during lunch breaks. The AI M9adem that works harder than the real one to debug your 1337 confusion.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl w-full px-4">
@@ -442,7 +451,7 @@ export default function ChatInterface() {
             </Button>
           </div>
           <p className="text-xs text-white/30 text-center mt-4 font-light tracking-wider">
-            Powered by 1337 RbatiBot AI • Designed by Omar_Gourragui, Bazghoro
+            Built by students for the 1337 struggle. Keep coding. Greatness awaits.
           </p>
         </div>
       </div>
