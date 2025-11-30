@@ -147,17 +147,36 @@ export default function ChatInterface() {
       timestamp: new Date(),
     }
 
+    // Get PREVIOUS messages only (not including the current user message)
+    // History should be the conversation BEFORE this new message
+    const historyToSend = messages.slice(-10).map(msg => ({
+      role: msg.role,
+      content: msg.content
+    }))
+    
+    // DEBUG: Log what we're sending - VERY VISIBLE
+    console.log("==================================================");
+    console.log("FRONTEND DEBUG - SENDING TO API");
+    console.log("==================================================");
+    console.log("Current message:", currentMessage);
+    console.log("Messages state length:", messages.length);
+    console.log("History to send:", JSON.stringify(historyToSend, null, 2));
+    console.log("==================================================");
+    
     setMessages((prev) => [...prev, userMessage])
     setIsTyping(true)
 
     try {
-      // 3. Send to the Backend API
+      // 3. Send to the Backend API with conversation history
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: currentMessage }),
+        body: JSON.stringify({ 
+          message: currentMessage,
+          history: historyToSend
+        }),
       })
 
       if (!response.ok) {

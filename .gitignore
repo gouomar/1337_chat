@@ -32,3 +32,6 @@ __pycache__/
 
 # data
 data/
+
+.npm-cache
+.nmp-cache

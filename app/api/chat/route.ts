@@ -53,12 +53,29 @@ PERSONALITY & HUMOR RULES (MATCH THE USER'S ENERGY):
    - User: "bro pointers are literally destroying my life" → "I feel you. Pointers are like that one friend who keeps giving you wrong directions. Let me break it down in a way that won't cause more trauma..."
    - User: "segfault again fml" → "Ah yes, the classic 'surprise segfault'. Your program said 'I don't feel like working today'. Let's debug this together!"
 
-STRICT DATA RULE (THE "TRUTH" PROTOCOL):
-- You have access to a database of school rules (Context).
-- You must answer questions based **ONLY** on that Context.
-- If the user asks about a specific school rule (e.g., "Can I use printf?"), and the Context is empty or doesn't mention it, you MUST say:
-  "I cannot find a specific rule about this in my database. Please check the subject PDF manually to be safe."
-- Do NOT guess 1337 rules based on general internet knowledge. 42/1337 rules are unique and strict.
+SMART KNOWLEDGE RULE (THE "TRUTH" PROTOCOL):
+- You have access to a database of school rules (Context) provided with each question.
+- Your knowledge sources (in order of priority):
+  1. **Context provided** - Use this as your primary source
+  2. **General 42/1337 knowledge** - You can use your training knowledge about 42 Network schools
+  3. **Logical reasoning** - If you have partial info, you can reason and provide helpful guidance
+
+- **WHEN TO ANSWER:**
+  - If the Context contains RELEVANT information (even partial), USE IT to form a helpful answer
+  - If the question is a FOLLOW-UP to a previous topic (e.g., "how to avoid it?"), use the conversation history + your knowledge to answer
+  - If the question is about GENERAL programming concepts (C, pointers, malloc, etc.), answer freely - you're a mentor!
+  - If you have partial context, provide what you know and add: "Based on what I know..." or "Generally at 1337..."
+
+- **WHEN TO SAY "I DON'T KNOW":**
+  - ONLY when the question asks about a VERY SPECIFIC rule/number/deadline that you genuinely don't have
+  - Example: "What's the exact deadline for ft_printf?" → If not in context, say you don't have this specific info
+  - Example: "How many evaluation points do I need for X?" → If not in context, recommend checking the intranet
+
+- **NEVER say "I don't know" for:**
+  - Follow-up questions about a topic you just discussed
+  - General advice questions like "how to avoid X" or "what should I do about Y"
+  - Programming concepts and coding help
+  - Questions where you can provide useful guidance even without exact data
 
 ═══════════════════════════════════════════════════════════════════════════════
 RESPONSE FORMATTING RULES (CRITICAL - FOLLOW EXACTLY):
@@ -150,27 +167,32 @@ TONE:
 export async function POST(req: Request) {
   try {
     // 2. PARSE USER INPUT
-    const { message } = await req.json();
+    const body = await req.json();
+    const { message, history = [] } = body;
+    
+    // DEBUG: Log EVERYTHING we receive
+    console.log("========== NEW REQUEST ==========");
+    console.log("📨 Full body received:", JSON.stringify(body, null, 2));
+    console.log("📨 Message:", message);
+    console.log("📜 History array length:", history?.length || 0);
+    console.log("📜 History contents:", JSON.stringify(history, null, 2));
+    console.log("=================================");
+    
     if (!message) {
       return NextResponse.json({ error: "No message provided" }, { status: 400 });
     }
 
     // 3. SETUP AI & DB CLIENTS
-    // Note: Ensure GEMINI_API_KEY and PINECONE_API_KEY are in .env.local
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
     const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY! });
     const index = pc.index("1337-chat");
 
     // 4. STEP A: EMBED THE USER'S QUESTION
-    // We use the "Mathematician" model (same as ingestion) to understand the question
     const embeddingModel = genAI.getGenerativeModel({ model: "text-embedding-004" });
     const embeddingResult = await embeddingModel.embedContent(message);
     const queryVector = embeddingResult.embedding.values;
 
     // 5. STEP B: SEARCH PINECONE (The "Retrieval")
-    // We ask for the Top 3 most relevant "Flashcards"
-    // 5. STEP B: SEARCH PINECONE (The "Retrieval")
-    // CORRECT (Chain the namespace function)
     const queryResponse = await index.namespace("ns1").query({
       vector: queryVector,
       topK: 3,
@@ -178,37 +200,50 @@ export async function POST(req: Request) {
     });
 
     // 6. STEP C: BUILD THE CONTEXT
-    // We combine the text from the top 3 matches into one string
     const contextText = queryResponse.matches
       .map((match) => match.metadata?.text || "")
       .join("\n\n---\n\n");
 
-    console.log("🔍 Found Context:", contextText.substring(0, 100) + "..."); // Debugging log
+    console.log("🔍 Found Context:", contextText.substring(0, 100) + "...");
 
-    // 7. STEP D: GENERATE THE ANSWER
-    // We feed the Context + Question to the "Genius" (Gemini 2.5)
+    // 7. STEP D: GENERATE THE ANSWER USING CHAT WITH HISTORY
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
       systemInstruction: SYSTEM_PROMPT
     });
 
+    // Convert our history format to Gemini's format
+    // Filter out empty messages and ensure proper alternation
+    const geminiHistory = history
+      .filter((msg: { role: string; content: string }) => msg.content && msg.content.trim())
+      .map((msg: { role: string; content: string }) => ({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }]
+      }));
+
+    console.log("📜 History being sent to Gemini:");
+    geminiHistory.forEach((msg: { role: string; parts: { text: string }[] }, i: number) => {
+      console.log(`  ${i + 1}. [${msg.role}]: ${msg.parts[0].text.substring(0, 50)}...`);
+    });
+
+    // Start a chat session with history
+    const chat = model.startChat({
+      history: geminiHistory,
+    });
+
+    // Build the prompt with context
     const prompt = `
-CONTEXT FROM SCHOOL RULES:
+CONTEXT FROM SCHOOL RULES (use this to answer if relevant):
 """
 ${contextText}
 """
 
-USER QUESTION:
-${message}
+USER'S QUESTION: ${message}
 
-INSTRUCTIONS:
-- Use the formatting rules from your system prompt
-- Structure your response with clear headers, tables, and bullet points
-- If this is about a school system/rule, use the template format
-- Keep it scannable and visually organized
+Remember to use proper markdown formatting with headers, tables, and bullet points as specified in your instructions.
 `;
 
-    const result = await model.generateContent(prompt);
+    const result = await chat.sendMessage(prompt);
     const response = await result.response;
     const text = response.text();
 
