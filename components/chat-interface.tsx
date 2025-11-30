@@ -7,7 +7,7 @@ import remarkGfm from "remark-gfm"
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { useState, useRef, useEffect } from "react"
-import { Send, Sparkles, Github, Terminal, MoreVertical } from "lucide-react"
+import { Send, Sparkles, Github, Terminal, MoreVertical, Code } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -16,6 +16,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronRight } from "lucide-react"
 
@@ -82,29 +88,57 @@ const Logo1337 = () => (
   </div>
 )
 
-const GitHubLink = () => (
-  <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <Button variant="ghost" size="icon" className="text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-full">
-        <MoreVertical className="h-5 w-5" />
-        <span className="sr-only">GitHub Links</span>
+const SourceCodeLink = () => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-full"
+        asChild
+      >
+        <a href="https://github.com/gouomar/1337_chat" target="_blank" rel="noopener noreferrer">
+          <Code className="h-5 w-5" />
+          <span className="sr-only">Source Code</span>
+        </a>
       </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" className="bg-black/80 border-white/10 backdrop-blur-xl text-white">
-      <DropdownMenuItem asChild className="focus:bg-white/10 focus:text-white cursor-pointer">
-        <a href="https://github.com/gouomar" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-          <Github className="h-4 w-4" />
-          <span>gouomar</span>
-        </a>
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild className="focus:bg-white/10 focus:text-white cursor-pointer">
-        <a href="https://github.com/mowardan" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-          <Github className="h-4 w-4" />
-          <span>mowardan</span>
-        </a>
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
+    </TooltipTrigger>
+    <TooltipContent side="bottom" className="bg-black/90 border-white/10 text-white">
+      <p>Source Code</p>
+    </TooltipContent>
+  </Tooltip>
+)
+
+const GitHubLink = () => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-full">
+            <MoreVertical className="h-5 w-5" />
+            <span className="sr-only">GitHub Creators</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="bg-black/80 border-white/10 backdrop-blur-xl text-white">
+          <DropdownMenuItem asChild className="focus:bg-white/10 focus:text-white cursor-pointer">
+            <a href="https://github.com/gouomar" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+              <Github className="h-4 w-4" />
+              <span>gouomar</span>
+            </a>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild className="focus:bg-white/10 focus:text-white cursor-pointer">
+            <a href="https://github.com/mowardan" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+              <Github className="h-4 w-4" />
+              <span>mowardan</span>
+            </a>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </TooltipTrigger>
+    <TooltipContent side="bottom" className="bg-black/90 border-white/10 text-white">
+      <p>GitHub Creators</p>
+    </TooltipContent>
+  </Tooltip>
 )
 
 // --- Main Chat Interface ---
@@ -223,6 +257,7 @@ export default function ChatInterface() {
   ]
 
   return (
+    <TooltipProvider>
     <div className="relative h-screen flex flex-col overflow-hidden bg-black text-white font-sans selection:bg-primary/30">
       <div className="scanlines absolute inset-0 pointer-events-none z-50 opacity-10" />
       <BackgroundSlider />
@@ -231,7 +266,10 @@ export default function ChatInterface() {
       <header className="relative z-20 border-b border-white/10 backdrop-blur-xl bg-black/20">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <Logo1337 />
-          <GitHubLink />
+          <div className="flex items-center gap-1">
+            <SourceCodeLink />
+            <GitHubLink />
+          </div>
         </div>
       </header>
 
@@ -466,5 +504,6 @@ export default function ChatInterface() {
         </div>
       </div>
     </div>
+    </TooltipProvider>
   )
 }
