@@ -8,7 +8,7 @@ const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Lm9dem - The Ultimate Coding Companion",
+  title: "Ba3bou3 - The Ultimate Coding Companion",
   description: "Advanced AI coding assistant for 1337 students. Architecting the future of code.",
   icons: {
     icon: [

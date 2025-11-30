@@ -69,7 +69,7 @@ const Logo1337 = () => (
     </div>
     <div className="flex items-center gap-2">
       <span className="text-2xl font-medium bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
-        <span className="text-primary font-bold">Lm9dem</span>
+        <span className="text-primary font-bold">Ba3bou3</span>
       </span>
       <span className="text-white/30">•</span>
       <span className="text-sm text-white/60 font-medium tracking-wide">
@@ -245,13 +245,13 @@ export default function ChatInterface() {
                 <h1
                   onClick={() => window.location.reload()}
                   className="text-5xl md:text-7xl font-bold mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white via-white/90 to-white/50 glitch cursor-pointer hover:scale-105 transition-transform duration-300"
-                  data-text="Lm9dem"
+                  data-text="Ba3bou3"
                 >
-                  Lm9dem
+                  Ba3bou3
                 </h1>
 
                 <p className="text-xl text-white/60 max-w-2xl mb-12 leading-relaxed font-light">
-                  Open during lunch breaks. The AI M9adem that works harder than the real one to debug your 1337 confusion.
+                  Open during lunch breaks. L'Ba3bou3 that works harder than the real one to debug your 1337 confusion.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl w-full px-4">
