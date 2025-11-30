@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="public/1337_logo.png" alt="Ba3bou3 Logo" width="120"/>
-</p>
-
 <h1 align="center">🤖 Ba3bou3 - 1337 AI Assistant</h1>
 
 <p align="center">
@@ -473,7 +469,7 @@ Contributions are welcome! Feel free to:
 
 ## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is open source 
 
 ---
 
