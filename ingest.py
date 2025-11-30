@@ -84,6 +84,36 @@ def chunk_text(text, size, overlap):
         start += (size - overlap)
     return chunks
 
+def sanitize_text(text):
+    """
+    Replace problematic Unicode characters with ASCII equivalents.
+    This fixes Pinecone's Latin-1 encoding issues.
+    """
+    replacements = {
+        '\u2019': "'",   # Right single quote
+        '\u2018': "'",   # Left single quote
+        '\u201c': '"',   # Left double quote
+        '\u201d': '"',   # Right double quote
+        '\u2013': '-',   # En dash
+        '\u2014': '--',  # Em dash
+        '\u2026': '...', # Ellipsis
+        '\u00a0': ' ',   # Non-breaking space
+        '\u200b': '',    # Zero-width space
+        '\u00e2': 'a',   # â
+        '\u20ac': 'EUR', # Euro sign
+        '\u00e9': 'e',   # é
+        '\u00e8': 'e',   # è
+        '\u00e0': 'a',   # à
+        '\u00f1': 'n',   # ñ
+    }
+    
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+    
+    # Remove any remaining non-ASCII characters
+    text = text.encode('ascii', 'ignore').decode('ascii')
+    return text
+
 # ==========================================
 # 🚀 MAIN EXECUTION
 # ==========================================
@@ -119,6 +149,9 @@ def main():
         
         # Clean up whitespace (tabs, double spaces)
         clean_text = " ".join(raw_text.split())
+        
+        # Sanitize text to remove problematic Unicode characters
+        clean_text = sanitize_text(clean_text)
         
         if not clean_text:
             print("   ⚠️ Skipped: File is empty or couldn't be read.")

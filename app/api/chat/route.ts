@@ -170,13 +170,8 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { message, history = [] } = body;
     
-    // DEBUG: Log EVERYTHING we receive
-    console.log("========== NEW REQUEST ==========");
-    console.log("📨 Full body received:", JSON.stringify(body, null, 2));
-    console.log("📨 Message:", message);
-    console.log("📜 History array length:", history?.length || 0);
-    console.log("📜 History contents:", JSON.stringify(history, null, 2));
-    console.log("=================================");
+    // Clean log - just show history length
+    console.log("📜 History length:", history?.length || 0);
     
     if (!message) {
       return NextResponse.json({ error: "No message provided" }, { status: 400 });
@@ -204,8 +199,6 @@ export async function POST(req: Request) {
       .map((match) => match.metadata?.text || "")
       .join("\n\n---\n\n");
 
-    console.log("🔍 Found Context:", contextText.substring(0, 100) + "...");
-
     // 7. STEP D: GENERATE THE ANSWER USING CHAT WITH HISTORY
     const model = genAI.getGenerativeModel({
       model: "gemini-2.5-flash",
@@ -220,11 +213,6 @@ export async function POST(req: Request) {
         role: msg.role === 'user' ? 'user' : 'model',
         parts: [{ text: msg.content }]
       }));
-
-    console.log("📜 History being sent to Gemini:");
-    geminiHistory.forEach((msg: { role: string; parts: { text: string }[] }, i: number) => {
-      console.log(`  ${i + 1}. [${msg.role}]: ${msg.parts[0].text.substring(0, 50)}...`);
-    });
 
     // Start a chat session with history
     const chat = model.startChat({

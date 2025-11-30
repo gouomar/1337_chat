@@ -154,15 +154,6 @@ export default function ChatInterface() {
       content: msg.content
     }))
     
-    // DEBUG: Log what we're sending - VERY VISIBLE
-    console.log("==================================================");
-    console.log("FRONTEND DEBUG - SENDING TO API");
-    console.log("==================================================");
-    console.log("Current message:", currentMessage);
-    console.log("Messages state length:", messages.length);
-    console.log("History to send:", JSON.stringify(historyToSend, null, 2));
-    console.log("==================================================");
-    
     setMessages((prev) => [...prev, userMessage])
     setIsTyping(true)
 
@@ -223,12 +214,12 @@ export default function ChatInterface() {
   }
 
   const suggestedPrompts = [
-    "Explain the peer-learning methodology",
-    "What are the rules for peer evaluations?",
-    "Explain the Norminette coding standard",
-    "What is the Black Hole system?",
-    "How does the coalition system work?",
-    "Explain memory management in C",
+    "Explain the new Common Core structure",
+    "How does the Heart System work?",
+    "What is the proper rules for a peer correction?",
+    "😎 How to convince a corrector I'm right (when I'm definitely wrong)",
+    "Explain the 'Norm' like I'm 5",
+    "If I delete the Norminette, do the errors go away? 🗑️",
   ]
 
   return (
@@ -270,7 +261,7 @@ export default function ChatInterface() {
                 </h1>
 
                 <p className="text-xl text-white/60 max-w-2xl mb-12 leading-relaxed font-light">
-                  Open during lunch breaks. L'Ba3bou3 that works harder than the real one to debug your 1337 confusion.
+                  Open during lunch breaks. L'Ba3bou3 that works harder than Ka3kou3 to debug your 1337 confusion.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl w-full px-4">
