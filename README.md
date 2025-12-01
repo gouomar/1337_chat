@@ -5,11 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="#features">Features</a> •
-  <a href="#architecture">Architecture</a> •
-  <a href="#tech-stack">Tech Stack</a> •
-  <a href="#getting-started">Getting Started</a> •
-  <a href="#how-it-works">How It Works</a>
+  <a href="https://www.ba3bou3.me/">🌐 Visit Ba3bou3</a>
 </p>
 
 <p align="center">
