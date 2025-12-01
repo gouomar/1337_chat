@@ -221,13 +221,13 @@ pip install pypdf google-generativeai pinecone python-dotenv
 Create a `.env` file in the root directory:
 
 ```env
-# For ingest.py (Python)
+# API Keys (used by both ingest.py and Next.js app)
 GOOGLE_API_KEY=your_google_ai_api_key
 PINECONE_API_KEY=your_pinecone_api_key
-
-# For Next.js app
 GEMINI_API_KEY=your_google_ai_api_key
 ```
+
+> **Note:** `ingest.py` automatically loads these keys from `.env` using `python-dotenv`. No need to edit any code!
 
 ### 4. Setup Pinecone
 
