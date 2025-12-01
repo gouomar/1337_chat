@@ -174,6 +174,30 @@ Ba3bou3 operates in **two independent phases**:
 
 ---
 
+## 🧠 How Chat Memory Works
+
+> The AI has **no real memory**. The browser sends the **entire conversation** with each message.
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│  Browser (React State)          Server                    AI       │
+│  ┌───────────────────┐         ┌──────────┐          ┌─────────┐   │
+│  │ messages = [...]  │──POST──►│ Builds   │─────────►│ Reads   │   │
+│  │                   │         │ prompt   │          │ prompt  │   │
+│  │ ⬅ MEMORY HERE    │         │ + history│          │ No mem! │   │
+│  └───────────────────┘         └──────────┘          └─────────┘   │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+| Fact | Explanation |
+|------|-------------|
+| Memory location | Browser's React state (`useState`) |
+| Each request sends | Current message + **all** previous messages |
+| Why "it" works | AI reads full history, understands context |
+| Page refresh | ⚠️ History is lost (state resets) |
+
+---
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology | Purpose |
