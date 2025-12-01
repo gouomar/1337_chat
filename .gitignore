@@ -36,6 +36,5 @@ data/
 .npm-cache
 .nmp-cache
 
-# Python scripts (local only)
-ingest.py
+# Python scripts
 process_data.py
