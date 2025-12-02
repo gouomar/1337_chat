@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import Image from "next/image"
 
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
@@ -69,20 +70,16 @@ const Logo1337 = () => (
     onClick={() => window.location.reload()}
     className="flex items-center gap-3 font-bold text-xl tracking-tighter cursor-pointer hover:opacity-80 transition-opacity"
   >
-    <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 border border-white/20 backdrop-blur-md overflow-hidden group shadow-lg">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      <Terminal className="h-5 w-5 text-white relative z-10" />
-    </div>
+    <svg width="76" height="20" viewBox="0 0 76 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2.8333 17.6623H5.92418V2.33766H2.31816V5.45455H0V1.49012e-07H8.75748V17.6623H11.8484V20H2.8333V17.6623Z" fill="white"/>
+      <path d="M21.3785 17.6623H30.6512V10.9091H22.1513V8.57143H30.6512V2.33766H21.3785V0H33.4845V20H21.3785V17.6623Z" fill="white"/>
+      <path d="M42.2419 17.6623H51.5146V10.9091H43.0147V8.57143H51.5146V2.33766H42.2419V0H54.3479V20H42.2419V17.6623Z" fill="white"/>
+      <path d="M72.6355 2.33766H64.9084V7.27273H62.5902V0H75.2113V20H72.6355V2.33766Z" fill="white"/>
+    </svg>
+    <span className="text-white/30">•</span>
     <div className="flex items-center gap-2">
       <span className="text-2xl font-medium bg-clip-text text-transparent bg-gradient-to-r from-white to-white/70">
         <span className="text-primary font-bold">Ba3bou3</span>
-      </span>
-      <span className="text-white/30">•</span>
-      <span className="text-sm text-white/60 font-medium tracking-wide">
-        <span className="text-white/40">by</span>{" "}
-        <span className="text-primary/80 hover:text-primary transition-colors">Omar_Gourragui</span>
-        <span className="text-white/40"> & </span>
-        <span className="text-primary/80 hover:text-primary transition-colors">Bazghoro</span>
       </span>
     </div>
   </div>
@@ -109,37 +106,54 @@ const SourceCodeLink = () => (
   </Tooltip>
 )
 
-const GitHubLink = () => (
-  <Tooltip>
-    <TooltipTrigger asChild>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-full">
-            <MoreVertical className="h-5 w-5" />
-            <span className="sr-only">GitHub Creators</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="bg-black/80 border-white/10 backdrop-blur-xl text-white">
-          <DropdownMenuItem asChild className="focus:bg-white/10 focus:text-white cursor-pointer">
-            <a href="https://github.com/gouomar" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-              <Github className="h-4 w-4" />
-              <span>gouomar</span>
-            </a>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className="focus:bg-white/10 focus:text-white cursor-pointer">
-            <a href="https://github.com/mowardan" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
-              <Github className="h-4 w-4" />
-              <span>mowardan</span>
-            </a>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </TooltipTrigger>
-    <TooltipContent side="bottom" className="bg-black/90 border-white/10 text-white">
-      <p>GitHub Creators</p>
-    </TooltipContent>
-  </Tooltip>
-)
+const GitHubLink = () => {
+  const [mounted, setMounted] = useState(false)
+  
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <Button variant="ghost" size="icon" className="text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-full">
+        <MoreVertical className="h-5 w-5" />
+        <span className="sr-only">GitHub Creators</span>
+      </Button>
+    )
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-full">
+              <MoreVertical className="h-5 w-5" />
+              <span className="sr-only">GitHub Creators</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="bg-black/80 border-white/10 backdrop-blur-xl text-white">
+            <DropdownMenuItem asChild className="focus:bg-white/10 focus:text-white cursor-pointer">
+              <a href="https://github.com/gouomar" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                <Github className="h-4 w-4" />
+                <span>gouomar</span>
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild className="focus:bg-white/10 focus:text-white cursor-pointer">
+              <a href="https://github.com/mowardan" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                <Github className="h-4 w-4" />
+                <span>mowardan</span>
+              </a>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </TooltipTrigger>
+      <TooltipContent side="bottom" className="bg-black/90 border-white/10 text-white">
+        <p>GitHub Creators</p>
+      </TooltipContent>
+    </Tooltip>
+  )
+}
 
 // --- Main Chat Interface ---
 
@@ -500,6 +514,9 @@ export default function ChatInterface() {
           </div>
           <p className="text-xs text-white/30 text-center mt-4 font-light tracking-wider">
             Built by students for the 1337 struggle. Keep coding. Greatness awaits.
+          </p>
+          <p className="text-xs text-white/30 text-center mt-2 font-light tracking-wider">
+            Made by <span className="text-primary/60">Omar_Gourragui</span> & <span className="text-primary/60">Bazghoro</span>
           </p>
         </div>
       </div>
