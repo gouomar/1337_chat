@@ -515,9 +515,6 @@ export default function ChatInterface() {
           <p className="text-xs text-white/30 text-center mt-4 font-light tracking-wider">
             Built by students for the 1337 struggle. Keep coding. Greatness awaits.
           </p>
-          <p className="text-xs text-white/30 text-center mt-2 font-light tracking-wider">
-            Made by <span className="text-primary/60">Omar_Gourragui</span> & <span className="text-primary/60">Bazghoro</span>
-          </p>
         </div>
       </div>
     </div>
