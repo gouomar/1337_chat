@@ -26,6 +26,44 @@ import {
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronRight } from "lucide-react"
 
+// --- Animated Ba3bou3 Text Component ---
+const AnimatedBa3bou3 = () => {
+  const text = "Ba3bou3"
+  
+  return (
+    <span className="inline-flex">
+      {text.split('').map((char, index) => (
+        <span
+          key={index}
+          className="animate-pulse-subtle"
+          style={{
+            color: 'rgba(255, 255, 255, 0.9)',
+            animationDelay: `${index * 0.15}s`,
+            display: 'inline-block',
+          }}
+        >
+          {char}
+        </span>
+      ))}
+      <style jsx>{`
+        @keyframes pulse-subtle {
+          0%, 100% {
+            opacity: 0.5;
+            color: rgba(255, 255, 255, 0.5);
+          }
+          50% {
+            opacity: 1;
+            color: rgba(255, 255, 255, 0.95);
+          }
+        }
+        .animate-pulse-subtle {
+          animation: pulse-subtle 3s ease-in-out infinite;
+        }
+      `}</style>
+    </span>
+  )
+}
+
 // --- Background Slider Component ---
 
 const images = [
@@ -306,10 +344,9 @@ export default function ChatInterface() {
 
                 <h1
                   onClick={() => window.location.reload()}
-                  className="text-5xl md:text-7xl font-bold mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-b from-white via-white/90 to-white/50 glitch cursor-pointer hover:scale-105 transition-transform duration-300"
-                  data-text="Ba3bou3"
+                  className="text-5xl md:text-7xl font-bold mb-6 tracking-tight cursor-pointer hover:scale-105 transition-transform duration-300"
                 >
-                  Ba3bou3
+                  <AnimatedBa3bou3 />
                 </h1>
 
                 <p className="text-xl text-white/60 max-w-2xl mb-12 leading-relaxed font-light">
