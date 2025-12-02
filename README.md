@@ -239,15 +239,6 @@ Ba3bou3 operates in **two independent phases**:
 
 ---
 
-## 📝 Important Notes
-
-1. **Never commit API keys** - Keep them in `.env` file which is gitignored
-2. **Run ingestion once** - Only re-run `ingest.py` when you add new documents
-3. **Chunk size matters** - 500 chars works well for most documents, adjust if needed
-4. **Pinecone free tier** - Has limits, but sufficient for most use cases
-
----
-
 ## 🤝 Contributing
 
 Contributions are welcome! Feel free to:
